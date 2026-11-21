@@ -214,5 +214,4 @@ def ask(question:str):
         "citations": []
     }
 
-    return agent_graph.invoke(initial)                   
-
+    return agent_graph.invoke(initial)
