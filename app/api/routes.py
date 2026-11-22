@@ -17,22 +17,31 @@ class ChatRequest(BaseModel):
 def health():
     return {"status": "ok", "service": settings.app_name}
 
+
 @router.post("/chat")
 def chat(payload: ChatRequest):
     try:
-         result = ask(payload.question)
-         write_audit(payload.question, result["source_used"], result.trace)
+        result = ask(payload.question)
 
-         return {
-             "answer": result["answer"],
-             "source_used": result["source_used"],
-             "trace": result.get("trace",[]),
-             "citations": result.get("citations",[]),
-             "rewritten_query": result.get("current_query", payload.question),
-         }
+        write_audit(
+            payload.question,
+            result["source_used"],
+            result.get("trace", [])
+        )
+
+        return {
+            "answer": result["answer"],
+            "source_used": result["source_used"],
+            "trace": result.get("trace", []),
+            "citations": result.get("citations", []),
+            "rewritten_query": result.get("current_query", payload.question),
+        }
 
     except Exception as exc:
+        import logging
+        logging.exception("Chat API failed")
         raise HTTPException(status_code=500, detail=str(exc)) from exc
+
 
 @router.post("/ingest")
 async def ingest(file: UploadFile = File(...), x_admin_key: str = Header(default="")):
