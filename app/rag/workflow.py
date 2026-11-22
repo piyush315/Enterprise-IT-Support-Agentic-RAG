@@ -115,11 +115,32 @@ general-knowledge questions that do not require company documents
 or current external information.
 
 Important routing rules:
-- Company-specific questions must use kb.
-- Current external information must use web.
+
+- HIGHEST PRIORITY: If the user asks a question
+  "according to", "based on", or "from" an uploaded,
+  indexed, or stored document, choose kb.
+
+- Questions mentioning a specific uploaded PDF,
+  annual report, handbook, policy document, or internal
+  knowledge-base file must use kb.
+
+- Even if the document is publicly available on the internet,
+  use kb when the user explicitly asks about the copy
+  stored in the private knowledge base.
+
+- Use web only when the user asks for latest information,
+  current external facts, recent announcements, or information
+  not expected to be available in stored documents.
+
+- Company-specific questions about uploaded documents
+  must use kb, not web.
+
 - Current system date/time questions must use datetime.
-- Do not use direct for questions requiring live information.
-- If uncertain whether external information may have changed, prefer web.
+
+- Greetings and stable general-knowledge questions use direct.
+
+- Do not choose web merely because a question mentions
+  a company name.
 
 Question: {state["question"]}
 
