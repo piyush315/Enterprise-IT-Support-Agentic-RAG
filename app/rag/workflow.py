@@ -69,6 +69,9 @@ def route_question(state: AgentState):
 
     decision = router.invoke(f"""
 You are an intelligent router for an enterprise IT support assistant.
+You are powered by:
+Provider: OpenAI
+Model: {settings.openai_model}
 
 Choose exactly one route:
 - kb
@@ -589,7 +592,41 @@ Return a clear, useful answer.
 # 8. DIRECT ANSWER
 # ---------------------------------------------------------
 
+
 def direct_answer(state: AgentState):
+
+    question = state["question"].lower().strip()
+
+    # Handle model identification using actual application settings.
+    model_keywords = [
+        "which model are you using",
+        "what model are you using",
+        "which llm are you using",
+        "what llm are you using",
+        "which model do you use",
+        "what is your model name",
+        "which ai model powers you",
+        "which model are you currently using",
+    ]
+
+    if any(keyword in question for keyword in model_keywords):
+
+        answer = (
+            f"I'm currently powered by OpenAI's "
+            f"{settings.openai_model} model."
+        )
+
+        return {
+            "answer": answer,
+            "source_used": "runtime_config",
+            "citations": [],
+            "trace": add_trace(
+                state,
+                f"Runtime configuration → {settings.openai_model}",
+            ),
+        }
+
+    # Normal direct LLM response for all other questions.
     answer = llm().invoke(
         f"Respond briefly and naturally to: {state['question']}"
     ).content
@@ -603,6 +640,7 @@ def direct_answer(state: AgentState):
             "Direct response → no retrieval",
         ),
     }
+
 
 
 # ---------------------------------------------------------
