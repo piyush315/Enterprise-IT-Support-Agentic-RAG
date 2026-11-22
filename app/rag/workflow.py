@@ -71,6 +71,10 @@ def route_question(state: AgentState):
 You are an intelligent router for an enterprise IT support assistant.
 
 Choose exactly one route:
+- kb
+- web
+- datetime
+- direct
 
 1. kb:
 Use for questions about information specific to the user's company:
@@ -110,9 +114,29 @@ Examples:
 "What is our current company policy?" → kb
 
 4. direct:
-Use only for greetings, thanks, casual conversation, and stable
-general-knowledge questions that do not require company documents
-or current external information.
+
+Use for:
+- Greetings and thanks
+- Casual conversation
+- Stable general-knowledge questions
+- General programming questions
+- General technical explanations
+- Questions that do not require company documents or current external information.
+- Questions about the chatbot itself and its runtime configuration
+
+Chatbot self-awareness questions include:
+- Which model are you currently using?
+- Are you powered by OpenAI or Anthropic?
+- Which LLM provider are you using?
+- What is your model name?
+- Which AI model powers this chatbot?
+- What is your embedding model?
+- What are your capabilities?
+- Who developed you?
+
+IMPORTANT:
+Questions about the chatbot's model, provider, or runtime configuration
+must always use the direct route.
 
 Important routing rules:
 
@@ -138,6 +162,9 @@ Important routing rules:
 - Current system date/time questions must use datetime.
 
 - Greetings and stable general-knowledge questions use direct.
+
+- Questions about the chatbot's own configured model and provider
+  must use direct, not web.
 
 - Do not choose web merely because a question mentions
   a company name.
